@@ -20,8 +20,7 @@ public class PlayerMovement : MonoBehaviour
         m_MovementVector = Vector3.zero;
         m_ClickedPosition = transform.position;
     }
-    
-    
+        
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void FixedUpdate()
     {
@@ -38,6 +37,10 @@ public class PlayerMovement : MonoBehaviour
         {
             m_PlayerCharacter.Move(m_MovementVector, false, false);
         }
+        else
+        {
+            StopPlayerMovement();
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,8 +53,15 @@ public class PlayerMovement : MonoBehaviour
         {
             return true;
         }
-
+     
         return false;
     }
+        
+    ///////////////////////////////////////////////////////////////////////////
+    void StopPlayerMovement()
+    {
+        m_MovementVector = Vector3.zero;
+    }
+
 }//End class
 

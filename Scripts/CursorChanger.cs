@@ -10,26 +10,26 @@ public class CursorChanger : MonoBehaviour
     [SerializeField] Texture2D m_WalkCursor = null;
     [SerializeField] Texture2D m_UnknownCursor = null;
     Vector2 m_CursorTargetPoint = new Vector2(96,96);
-
+        
     ////////////////////////////////////////////////////////////////////////
     private void Start()
     {
         m_CameraRaycast = GetComponent<CameraRayCast>();
+        m_CameraRaycast.LayerChangeEventBroadCaster += OnLayerChangeEventCallback;
     }
 
-    ///////////////////////////////////////////////////////////////////////
-    private void Update()
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    void OnLayerChangeEventCallback(CameraCastLayer changedLayer)
     {
-        //Change cursor according to what's pointed at
-        switch(m_CameraRaycast.GetCurrentCameraHitLayer())
+        switch (changedLayer)
         {
             case CameraCastLayer.CameraCastLayer_Enemy:
                 Cursor.SetCursor(m_TargetCursor, m_CursorTargetPoint, CursorMode.Auto); break;
             case CameraCastLayer.CameraCastLayer_Walkable:
                 Cursor.SetCursor(m_WalkCursor, m_CursorTargetPoint, CursorMode.Auto); break;
-            case CameraCastLayer.CameraCastLayer_None:
+            case CameraCastLayer.CameraCastLayer_Unknown:
                 Cursor.SetCursor(m_UnknownCursor, m_CursorTargetPoint, CursorMode.Auto); break;
             default: break;
         }
     }
-}
+}//End Class
