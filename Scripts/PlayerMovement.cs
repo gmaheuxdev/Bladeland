@@ -7,35 +7,48 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class PlayerMovement : MonoBehaviour
 {
     //Member variables
-    private CameraRayCast m_PlayerCameraRaycaster;
-    private ThirdPersonCharacter m_PlayerCharacter;
+    private CameraRayCast m_CachedPlayerCameraRaycaster;
+    private ThirdPersonCharacter m_CachedPlayerCharacter;
+    [SerializeField] float m_MovementStopDistance;
+
+    //Declarations for Update methods(Prevent declaration every frame)
     private Vector3 m_MovementVector;
     private Vector3 m_ClickedPosition;
+    private Vector3 m_MovementDestinationPosition;
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     private void Start()
     {
-        m_PlayerCameraRaycaster = Camera.main.GetComponent<CameraRayCast>();
-        m_PlayerCharacter = GetComponent<ThirdPersonCharacter>();
+        m_CachedPlayerCameraRaycaster = Camera.main.GetComponent<CameraRayCast>();
+        m_CachedPlayerCharacter = GetComponent<ThirdPersonCharacter>();
         m_MovementVector = Vector3.zero;
         m_ClickedPosition = transform.position;
     }
-        
+     
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void FixedUpdate()
     {
+        UpdatePlayerMovement();
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void UpdatePlayerMovement()
+    {
         if (Input.GetMouseButton(0))
         {
-            if (m_PlayerCameraRaycaster.GetCurrentCameraHitLayer() == CameraCastLayer.CameraCastLayer_Walkable)
+            switch(m_CachedPlayerCameraRaycaster.GetCurrentCameraHitLayer())
             {
-                m_ClickedPosition = m_PlayerCameraRaycaster.GetCurrentCameraCastHit().point;
-                m_MovementVector = m_ClickedPosition - transform.position;
+                case CameraCastLayer.CameraCastLayer_Walkable:
+                case CameraCastLayer.CameraCastLayer_Enemy:
+                    m_ClickedPosition = m_CachedPlayerCameraRaycaster.GetCurrentCameraCastHit().point;
+                    m_MovementVector = m_ClickedPosition - transform.position;
+                    m_MovementDestinationPosition = CalculateMovementDestinationPosition(); break;
             }
         }
 
         if (IsMovementRange())
         {
-            m_PlayerCharacter.Move(m_MovementVector, false, false);
+            m_CachedPlayerCharacter.Move(m_MovementVector, false, false);
         }
         else
         {
@@ -46,10 +59,9 @@ public class PlayerMovement : MonoBehaviour
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     bool IsMovementRange()
     {
-        float movementRadius = 0.2f;
-        Vector3 playerPosToClickPoint = m_ClickedPosition - transform.position;
-
-        if (playerPosToClickPoint.magnitude > movementRadius)
+        Vector3 playerPosToClickPoint = transform.position - m_ClickedPosition;
+        
+        if (playerPosToClickPoint.magnitude > m_MovementStopDistance)
         {
             return true;
         }
@@ -61,6 +73,23 @@ public class PlayerMovement : MonoBehaviour
     void StopPlayerMovement()
     {
         m_MovementVector = Vector3.zero;
+        m_CachedPlayerCharacter.Move(m_MovementVector, false, false);
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+        Gizmos.DrawLine(transform.position, m_ClickedPosition);
+        Gizmos.DrawSphere(m_ClickedPosition, 0.1f);
+        Gizmos.DrawSphere(m_MovementDestinationPosition, 0.1f);
+    }
+
+   //////////////////////////////////////////////////////////////////////////////
+    Vector3 CalculateMovementDestinationPosition()
+    {
+        Vector3 movementDestinationReduction = ((m_ClickedPosition - transform.position).normalized) * m_MovementStopDistance;
+        return m_ClickedPosition - movementDestinationReduction;
     }
 
 }//End class
