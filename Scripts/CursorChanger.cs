@@ -5,29 +5,29 @@ using UnityEngine;
 public class CursorChanger : MonoBehaviour
 {
     //Member Variables
-    CameraRayCast m_CameraRaycast;
+    CameraRayCaster m_CameraRaycaster;
     [SerializeField] Texture2D m_TargetCursor = null;
     [SerializeField] Texture2D m_WalkCursor = null;
     [SerializeField] Texture2D m_UnknownCursor = null;
     Vector2 m_CursorTargetPoint = new Vector2(96,96);
-        
+               
     ////////////////////////////////////////////////////////////////////////
     private void Start()
     {
-        m_CameraRaycast = GetComponent<CameraRayCast>();
-        m_CameraRaycast.LayerChangeEventBroadCaster += OnLayerChangeEventCallback;
+        m_CameraRaycaster = GetComponent<CameraRayCaster>();
+        m_CameraRaycaster.LayerChangeEventBroadcaster += OnLayerChangeEventCallback;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    void OnLayerChangeEventCallback(CameraCastLayer changedLayer)
+    void OnLayerChangeEventCallback(CameraRayCastLayerEnum changedLayer)
     {
         switch (changedLayer)
         {
-            case CameraCastLayer.CameraCastLayer_Enemy:
+            case CameraRayCastLayerEnum.CameraRayCastLayerEnum_Enemy:
                 Cursor.SetCursor(m_TargetCursor, m_CursorTargetPoint, CursorMode.Auto); break;
-            case CameraCastLayer.CameraCastLayer_Walkable:
+            case CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable:
                 Cursor.SetCursor(m_WalkCursor, m_CursorTargetPoint, CursorMode.Auto); break;
-            case CameraCastLayer.CameraCastLayer_Unknown:
+            case CameraRayCastLayerEnum.CameraRayCastLayerEnum_Unknown:
                 Cursor.SetCursor(m_UnknownCursor, m_CursorTargetPoint, CursorMode.Auto); break;
             default: break;
         }

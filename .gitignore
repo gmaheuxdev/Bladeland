@@ -3,3 +3,12 @@
 *.mat
 *.psd
 *.prefab
+*.fbx
+*.png
+*.txt
+*.anim
+*.overrideController
+*.controller
+*.blend
+*.asset
+*.wav
