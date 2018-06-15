@@ -32,11 +32,11 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Component damageableComponent = collision.gameObject.GetComponent(typeof(IDamageable));
+        DamageComponent objectDamageComponent = collision.gameObject.GetComponent<DamageComponent>();
 
-        if (damageableComponent != null && collision.gameObject.layer != gameObject.layer)
+        if (objectDamageComponent != null && collision.gameObject.layer != gameObject.layer)
         {
-            (damageableComponent as IDamageable).TakeDamage(m_ProjectileDamageAmount);
+            objectDamageComponent.TakeDamage(m_ProjectileDamageAmount);
             Destroy(gameObject);
         }
     }

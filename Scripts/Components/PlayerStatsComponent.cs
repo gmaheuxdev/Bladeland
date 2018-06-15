@@ -9,6 +9,9 @@ public class PlayerStatsComponent : MonoBehaviour
     [SerializeField]private float m_PlayerCurrentHealth;
     [SerializeField]private float m_PlayerTotalMana;
     [SerializeField]private float m_PlayerCurrentMana;
+    [SerializeField]private float m_ManaRechargeRate;
+    [SerializeField]private float m_CritChance;
+    [SerializeField]private float m_CritMultiplier;
 
     //Getters and Setters
     public float GetPlayerTotalHealth() {return m_PlayerTotalHealth;}
@@ -17,6 +20,8 @@ public class PlayerStatsComponent : MonoBehaviour
     public float GetPlayerTotalMana() { return m_PlayerTotalMana;}
     public float GetPlayerCurrentMana() { return m_PlayerCurrentMana;}
     public float GetPlayerCurrentManaPercentage() { return m_PlayerCurrentMana / m_PlayerTotalMana;}
+    public float GetCritChance() {return m_CritChance;}
+    public float GetCritMultiplier() { return m_CritMultiplier;}
 
     public void RemovePlayerHealth(float amountToRemove) { m_PlayerCurrentHealth -= amountToRemove;}
     public void AddPlayerHealth(float amountToAdd) { m_PlayerCurrentHealth += amountToAdd;}
@@ -24,9 +29,17 @@ public class PlayerStatsComponent : MonoBehaviour
     public void AddPlayerMana(float amountToAdd) { m_PlayerCurrentMana += amountToAdd;}
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void Start ()
+    void Start ()
     {
         m_PlayerCurrentHealth = m_PlayerTotalHealth;
         m_PlayerCurrentMana = m_PlayerTotalMana;
 	}
+
+    void Update()
+    {
+        if(m_PlayerCurrentMana != m_PlayerTotalMana)
+        {
+            m_PlayerCurrentMana += m_ManaRechargeRate * Time.deltaTime;
+        }
+    }
 }

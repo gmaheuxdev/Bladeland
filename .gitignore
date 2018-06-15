@@ -12,3 +12,5 @@
 *.blend
 *.asset
 *.wav
+Scripts/Components/EnemyCombatComponent.cs
+Scripts/AICharacterControl.cs

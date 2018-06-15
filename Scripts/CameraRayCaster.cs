@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,18 +18,19 @@ public enum CameraRayCastLayerEnum
 public class CameraRayCaster : MonoBehaviour
 {
     //Member variables
-
     private Camera m_PlayerCamera;
     private List<CameraRayCastLayerEnum> m_LayerPriorityList;
     [SerializeField]private float m_RaycastMaxRange;
     private CameraRayCastLayerEnum m_CurrentSeenLayerEnum;
     private RaycastHit m_CurrentActivehit;
 
-    //Class events
-    public delegate void LayerChangeEvent(CameraRayCastLayerEnum changedLayer);
-    public event LayerChangeEvent LayerChangeEventBroadcaster;
+    //Mouse cursor variables
+    [SerializeField] Texture2D m_EnemyCursor = null;
+    [SerializeField] Texture2D m_WalkCursor = null;
+    [SerializeField] Texture2D m_UnknownCursor = null;
+    Vector2 m_CursorTargetPoint = new Vector2(96, 96);
 
-    //Getters and setters
+   //Getters and setters
    public CameraRayCastLayerEnum GetCurrentSeenLayerEnum() { return m_CurrentSeenLayerEnum;}
    public RaycastHit GetCurrentActiveHit() { return m_CurrentActivehit;}
 
@@ -38,8 +40,44 @@ public class CameraRayCaster : MonoBehaviour
         SetupLayerPriorityList();
         m_PlayerCamera = Camera.main;
     }
-
     
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void Update()
+    {
+        UpdateCameraRaycast();
+    }
+        
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void UpdateCameraRaycast()
+    {
+        RaycastHit[] raycastHitList = RayCastMousePosition();
+        RaycastHit? priorityHit = FindPriorityHit(raycastHitList);
+
+        if (priorityHit.HasValue)
+        {
+            ManageMouseCursor(priorityHit);
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void SetupLayerPriorityList()
+    {
+        m_LayerPriorityList = new List<CameraRayCastLayerEnum>(); //Private Array has to be on heap to work..sadly
+
+        //Top priority is the last one inserted at zero.
+        m_LayerPriorityList.Insert(0, CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable);
+        m_LayerPriorityList.Insert(0, CameraRayCastLayerEnum.CameraRayCastLayerEnum_Enemy);
+    }
+    
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private RaycastHit[] RayCastMousePosition()
+    {
+        Ray mousePointerRay = m_PlayerCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] raycastHitList = Physics.RaycastAll(mousePointerRay, m_RaycastMaxRange);
+        Physics.RaycastAll(mousePointerRay);
+        return raycastHitList;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private RaycastHit? FindPriorityHit(RaycastHit[] raycastHitList)
     {
@@ -58,35 +96,31 @@ public class CameraRayCaster : MonoBehaviour
         return null;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void Update()
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void ManageMouseCursor(RaycastHit? priorityHit)
     {
-        Ray mousePointerRay = m_PlayerCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit[] raycastHitList = Physics.RaycastAll(mousePointerRay, m_RaycastMaxRange);
-        Physics.RaycastAll(mousePointerRay);
+        m_CurrentActivehit = priorityHit.Value;
+        CameraRayCastLayerEnum foundPriorityLayer = (CameraRayCastLayerEnum)m_CurrentActivehit.transform.gameObject.layer;
 
-       RaycastHit? foundHit = FindPriorityHit(raycastHitList);
-
-        if(foundHit.HasValue)
+        if (foundPriorityLayer != m_CurrentSeenLayerEnum)
         {
-            m_CurrentActivehit = foundHit.Value;
-            CameraRayCastLayerEnum foundPriorityLayer = (CameraRayCastLayerEnum)m_CurrentActivehit.transform.gameObject.layer;
-
-            if (foundPriorityLayer != m_CurrentSeenLayerEnum)
-            {
-                m_CurrentSeenLayerEnum = foundPriorityLayer;
-                LayerChangeEventBroadcaster(m_CurrentSeenLayerEnum);
-            }
+            m_CurrentSeenLayerEnum = foundPriorityLayer;
+            SetMouseCursor(foundPriorityLayer);
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void SetupLayerPriorityList()
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void SetMouseCursor(CameraRayCastLayerEnum layerCursorToApply)
     {
-        m_LayerPriorityList = new List<CameraRayCastLayerEnum>(); //Private Array has to be on heap to work..sadly
-
-        //Top priority is the last one inserted at zero.
-        m_LayerPriorityList.Insert(0, CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable);
-        m_LayerPriorityList.Insert(0, CameraRayCastLayerEnum.CameraRayCastLayerEnum_Enemy);
+        switch (layerCursorToApply)
+        {
+            case CameraRayCastLayerEnum.CameraRayCastLayerEnum_Enemy:
+                Cursor.SetCursor(m_EnemyCursor, m_CursorTargetPoint, CursorMode.Auto); break;
+            case CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable:
+                Cursor.SetCursor(m_WalkCursor, m_CursorTargetPoint, CursorMode.Auto); break;
+            case CameraRayCastLayerEnum.CameraRayCastLayerEnum_Unknown:
+                Cursor.SetCursor(m_UnknownCursor, m_CursorTargetPoint, CursorMode.Auto); break;
+            default: break;
+        }
     }
 }
