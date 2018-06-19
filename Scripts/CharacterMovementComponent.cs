@@ -7,10 +7,8 @@ public class CharacterMovementComponent : MonoBehaviour
 {
     //Member variables
     private NavMeshAgent m_CachedPlayerNavMeshAgent;
-    private CameraRayCaster m_CachedPlayerCameraRaycaster;
-    private PlayerStatsComponent m_CachedPlayerStatsComponent;
-    [SerializeField] int m_ClickManaConsumption;
-
+    private CharacterStatsComponent m_CachedPlayerStatsComponent;
+    
     //Animation stuff
     [SerializeField]  float m_MovingTurnSpeed = 360;
     [SerializeField]  float m_StationaryTurnSpeed = 180;
@@ -23,58 +21,22 @@ public class CharacterMovementComponent : MonoBehaviour
     float m_ForwardAmount;
     Vector3 m_GroundNormal;
 
+    NavMeshAgent GetCharacterNavMeshAgent() {return m_CachedPlayerNavMeshAgent;}
 
-    //Declarations for Update methods(Prevent declaration every frame)
-    private Vector3 m_MovementVector;
-    private Vector3 m_ClickedPosition;
-    private Vector3 m_MovementDestinationPosition;
-    
     /////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void Start()
+    void Start()
     {
-        m_CachedPlayerCameraRaycaster = Camera.main.GetComponent<CameraRayCaster>();
         m_Animator = GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_CachedPlayerNavMeshAgent = GetComponent<NavMeshAgent>();
-        m_CachedPlayerStatsComponent = GetComponent<PlayerStatsComponent>();
+        m_CachedPlayerStatsComponent = GetComponent<CharacterStatsComponent>();
 
-        m_MovementVector = Vector3.zero;
-        m_ClickedPosition = transform.position;
         m_CachedPlayerNavMeshAgent.updateRotation = false;
         m_CachedPlayerNavMeshAgent.updatePosition = true;
-        m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotation; 
-    }
-     
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void FixedUpdate()
-    {
-        UpdatePlayerMovement();
+        m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void UpdatePlayerMovement()
-    {
-        UpdateMovementDestination();
-        ApplyMovement();
-    }
-    
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void UpdateMovementDestination()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            switch (m_CachedPlayerCameraRaycaster.GetCurrentSeenLayerEnum())
-            {
-                case CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable:
-                case CameraRayCastLayerEnum.CameraRayCastLayerEnum_Enemy:
-                    m_ClickedPosition = m_CachedPlayerCameraRaycaster.GetCurrentActiveHit().point;
-                    m_CachedPlayerNavMeshAgent.SetDestination(m_ClickedPosition); break;
-            }
-        }
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void ApplyMovement()
+    void Update()
     {
         if (m_CachedPlayerNavMeshAgent.remainingDistance > m_CachedPlayerNavMeshAgent.stoppingDistance)
         {
@@ -87,11 +49,14 @@ public class CharacterMovementComponent : MonoBehaviour
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void BeginMoveTo(Vector3 newDestination)
+    {
+        m_CachedPlayerNavMeshAgent.SetDestination(newDestination);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Move(Vector3 move)
     {
-        // convert the world relative moveInput vector into a local-relative
-        // turn amount and forward amount required to head in the desired
-        // direction.
         if (move.magnitude > 1f) move.Normalize();
         move = transform.InverseTransformDirection(move);
         move = Vector3.ProjectOnPlane(move, m_GroundNormal);
