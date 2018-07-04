@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AoeAttackBehavior : SpecialAbilityBehavior
 {
-    public override void Use(GameObject target = null)
+    public override void Use()
     {
         RaycastHit[] sphereCastHitList = Physics.SphereCastAll(gameObject.transform.position, (m_AbilityConfig as AoeAttackConfig).GetAoeRadius(), Vector3.up);
         ApplyRadialDamage(sphereCastHitList);

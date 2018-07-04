@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharacterStatsComponent : MonoBehaviour
 {
-    //Member variables
+    //Serialized variables
     [SerializeField]private float m_TotalHealth;
     [SerializeField]private float m_CurrentHealth;
     [SerializeField]private float m_TotalMana;
@@ -12,6 +12,12 @@ public class CharacterStatsComponent : MonoBehaviour
     [SerializeField]private float m_ManaRechargeRate;
     [SerializeField]private float m_CritChance;
     [SerializeField]private float m_CritMultiplier;
+    [SerializeField]private int m_XPGivenOnDeath;
+    //Other member variables
+    private int m_CurrentLevel;
+    private int m_CurrentlevelXPAmount;
+    private int m_XPToLevelUp;
+   
 
     //Getters and Setters
     public float GetTotalHealth() {return m_TotalHealth;}
@@ -22,11 +28,13 @@ public class CharacterStatsComponent : MonoBehaviour
     public float GetCurrentManaPercentage() { return m_CurrentMana / m_TotalMana;}
     public float GetCritChance() {return m_CritChance;}
     public float GetCritMultiplier() { return m_CritMultiplier;}
+    public int GetXPGivenOnDeath() { return m_XPGivenOnDeath;}
 
     public void RemoveHealth(float amountToRemove) { m_CurrentHealth -= amountToRemove;}
     public void AddHealth(float amountToAdd) { m_CurrentHealth += amountToAdd;}
     public void RemoveMana(float amountToRemove) { m_CurrentMana -= amountToRemove;}
     public void AddMana(float amountToAdd) { m_CurrentMana += amountToAdd;}
+    private void AddXP(int amountToAdd) { m_CurrentlevelXPAmount += amountToAdd;}
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void Start ()
@@ -35,11 +43,28 @@ public class CharacterStatsComponent : MonoBehaviour
         m_CurrentMana = m_TotalMana;
 	}
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void Update()
     {
-        if(m_CurrentMana != m_TotalMana)
+        UpdateManaAmount();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void UpdateManaAmount()
+    {
+        if (m_CurrentMana != m_TotalMana)
         {
             m_CurrentMana += m_ManaRechargeRate * Time.deltaTime;
         }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    public void OnXpGainCallback(int XPAmount) //Player Only
+    {
+        m_CurrentlevelXPAmount += XPAmount;
+        print("You Gained " + XPAmount + " Experience points");
+        print("You now have " + m_CurrentlevelXPAmount + "XP points on this level");
+        int XpLeftToLevelUp = m_XPToLevelUp - m_CurrentlevelXPAmount;
+        print("You need to gain " + XpLeftToLevelUp + "To Level up");
     }
 }

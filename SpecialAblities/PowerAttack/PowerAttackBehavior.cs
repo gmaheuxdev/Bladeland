@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class PowerAttackBehavior : SpecialAbilityBehavior
 {
-    public override void Use(GameObject target)
+    public override void Use()
     {
         PlayAbilityEffects();
         PlayAbilitySounds();
         PlayAbilityAnimation();
-        ApplyPowerAttackDamage(target);
+        ApplyPowerAttackDamage();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void ApplyPowerAttackDamage(GameObject target)
+    void ApplyPowerAttackDamage()
     {
-        float totalDamage = (m_AbilityConfig as PowerAttackConfig).GetPowerAttackDamage();
-        DamageComponent targetDamageComponent = target.GetComponent<DamageComponent>();
+       // float totalDamage = (m_AbilityConfig as PowerAttackConfig).GetPowerAttackDamage();
+       // DamageComponent targetDamageComponent = target.GetComponent<DamageComponent>();
     }
 }

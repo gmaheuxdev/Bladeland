@@ -21,11 +21,11 @@ public class SpecialAbiltyComponent : MonoBehaviour
     }
 
     ////////////////////////////////////////////////////////////////////////
-    public void TryUseSpecialAbility(GameObject target = null)
+    public void UseSpecialAbility(int abilityIndex)
     {
         if(m_PlayerSpecialAbilities.Length >=1)
         {
-            m_PlayerSpecialAbilities[0].UseSpecialAbility(target);
+            m_PlayerSpecialAbilities[abilityIndex].UseSpecialAbility();
         }
     }
 }

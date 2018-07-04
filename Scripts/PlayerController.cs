@@ -7,29 +7,17 @@ public class PlayerController : MonoBehaviour
 {
     //Member variables
     CameraRayCaster m_CachedCameraRaycaster;
-    [SerializeField] private float  m_playerDamage;
-    [SerializeField] private AnimatorOverrideController m_CachedPlayerAnimatorOverrideController;
-    private Animator m_CachedPlayerAnimator;
-    CharacterStatsComponent m_CachedPlayerStatsComponent;
-    SpecialAbiltyComponent m_CachedPlayerSpecialAbilityComponent;
+    SpecialAbiltyComponent m_CachedSpecialAbilityComponent;
     CharacterMovementComponent m_CachedPlayerMovementComponent;
     WeaponComponent m_CachedPlayerWeaponComponent;
-
-    //Sounds
-    AudioClip[] m_DamageSounds;
-    AudioClip[] m_DeathSounds;
-        
+   
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void Start ()
     {
         m_CachedCameraRaycaster = Camera.main.GetComponent<CameraRayCaster>();
-        m_CachedPlayerAnimator = GetComponent<Animator>();
-        m_CachedPlayerStatsComponent = GetComponent<CharacterStatsComponent>();
-        m_CachedPlayerSpecialAbilityComponent = GetComponent<SpecialAbiltyComponent>();
+        m_CachedSpecialAbilityComponent = GetComponent<SpecialAbiltyComponent>();
         m_CachedPlayerMovementComponent = GetComponent<CharacterMovementComponent>();
         m_CachedPlayerWeaponComponent = GetComponent<WeaponComponent>();
-        
-        OverrideAnimatorController();
     }
          
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,34 +41,18 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-           TryDoRightClickAbility();
+            m_CachedSpecialAbilityComponent.UseSpecialAbility(0);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1)){print("DoAbility1");}
-        if (Input.GetKeyDown(KeyCode.Alpha2)){print("DoAbility2");}
-        if (Input.GetKeyDown(KeyCode.Alpha3)){print("DoAbility3");}
-        if (Input.GetKeyDown(KeyCode.Alpha4)){print("DoAbility4");}
-        if (Input.GetKeyDown(KeyCode.Alpha5)){print("DoAbility5");}
-        if (Input.GetKeyDown(KeyCode.Alpha6)){print("DoAbility6");}
-        if (Input.GetKeyDown(KeyCode.Alpha7)){print("DoAbility7");}
-        if (Input.GetKeyDown(KeyCode.Alpha8)){print("DoAbility8");}
-        if (Input.GetKeyDown(KeyCode.Alpha9)){print("DoAbility9");}
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void TryDoRightClickAbility()
-    {
-        //Can only be done on enemies in range
-        if ((int)m_CachedCameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Enemy)
-        {
-            GameObject currentEnemyTarget = m_CachedCameraRaycaster.GetCurrentActiveHit().collider.gameObject;
-
-            if (TargetInAbilityRange(currentEnemyTarget))
-            {
-                m_CachedPlayerAnimator.SetTrigger("IsAttacking");
-                m_CachedPlayerSpecialAbilityComponent.TryUseSpecialAbility(currentEnemyTarget);
-            }
-        }
+        if (Input.GetKeyDown(KeyCode.Alpha1)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(1); }
+        if (Input.GetKeyDown(KeyCode.Alpha2)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(2); }
+        if (Input.GetKeyDown(KeyCode.Alpha3)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(3); }
+        if (Input.GetKeyDown(KeyCode.Alpha4)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(4); }
+        if (Input.GetKeyDown(KeyCode.Alpha5)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(5); }
+        if (Input.GetKeyDown(KeyCode.Alpha6)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(6); }
+        if (Input.GetKeyDown(KeyCode.Alpha7)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(7); }
+        if (Input.GetKeyDown(KeyCode.Alpha8)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(8); }
+        if (Input.GetKeyDown(KeyCode.Alpha9)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(9); }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,10 +61,11 @@ public class PlayerController : MonoBehaviour
         if ((int)m_CachedCameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Enemy)
         {
             GameObject currentEnemyTarget = m_CachedCameraRaycaster.GetCurrentActiveHit().collider.gameObject;
+            m_CachedPlayerWeaponComponent.SetCurrentTarget(currentEnemyTarget);
 
-            if (TargetInWeaponRange(currentEnemyTarget))
+            if (m_CachedPlayerWeaponComponent.IsTargetInWeaponRange())
             {
-                m_CachedPlayerWeaponComponent.WeaponAttack(currentEnemyTarget);
+                m_CachedPlayerWeaponComponent.WeaponAttack();
             }
         }
         else if((int)m_CachedCameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable)
@@ -115,26 +88,4 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    private bool TargetInWeaponRange(GameObject target)
-    {
-        return Vector3.Distance(transform.position, target.transform.position) <
-                                m_CachedPlayerWeaponComponent.GetEquippedWeaponConfig().GetWeaponAttackRange();
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    private bool TargetInAbilityRange(GameObject target)
-    {
-        return false;                               
-    }
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void OverrideAnimatorController()
-    {
-        m_CachedPlayerAnimator.runtimeAnimatorController = m_CachedPlayerAnimatorOverrideController;
-        m_CachedPlayerAnimatorOverrideController["DEFAULTATTACKANIMATION"] = m_CachedPlayerWeaponComponent.GetEquippedWeaponConfig().GetWeaponAttackAnimation();
-        m_CachedPlayerWeaponComponent.GetEquippedWeaponConfig().ClearAnimationEvents(); //Asset packs configuration can cause bugs without it
-    }
-
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }//class end

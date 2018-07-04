@@ -14,3 +14,5 @@
 *.wav
 Scripts/Components/EnemyCombatComponent.cs
 Scripts/AICharacterControl.cs
+*.aiff
+*.mp3

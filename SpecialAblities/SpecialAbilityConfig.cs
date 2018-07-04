@@ -11,7 +11,7 @@ public abstract class SpecialAbilityConfig : ScriptableObject
     [SerializeField] AudioClip m_AbilitySound;
     [SerializeField] AnimationClip m_AbilityAnimation;
     protected SpecialAbilityBehavior m_AbilityBehavior;
-
+    
     //Getters and setters
     public float GetAbilityManaCost() { return m_AbilityManaCost; }
     public GameObject GetAbilityParticleSystemPrefab() { return m_AbilityParticleSystemPrefab; }
@@ -26,11 +26,12 @@ public abstract class SpecialAbilityConfig : ScriptableObject
     {
         m_AbilityBehavior = AttachAbilityBehaviorTo(gameObjectToAttachTo);
         m_AbilityBehavior.SetAbilityConfig(this);
+        m_AbilityBehavior.SetAbilityOwner(gameObjectToAttachTo);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void UseSpecialAbility(GameObject target)
+    public void UseSpecialAbility()
     {
-        m_AbilityBehavior.Use(target);
+        m_AbilityBehavior.Use();
     }
 }

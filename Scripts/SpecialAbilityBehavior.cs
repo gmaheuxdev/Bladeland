@@ -6,8 +6,11 @@ using UnityEngine;
 public abstract class SpecialAbilityBehavior : MonoBehaviour
 {
     protected SpecialAbilityConfig m_AbilityConfig;
-    public abstract void Use(GameObject target); //TODO: BETTER SOLUTION?? want to enforce when needed and not enforce when not needed
-    public void SetAbilityConfig(SpecialAbilityConfig newAbilityConfig){m_AbilityConfig = newAbilityConfig;}
+    protected GameObject m_AbilityOwner;
+
+    public abstract void Use(); //TODO: BETTER SOLUTION?? want to enforce when needed and not enforce when not needed
+    public void SetAbilityConfig(SpecialAbilityConfig newAbilityConfig) { m_AbilityConfig = newAbilityConfig; }
+    public void SetAbilityOwner(GameObject newAbilityOwner) { m_AbilityOwner = newAbilityOwner;}
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected void PlayAbilityEffects()
@@ -21,7 +24,7 @@ public abstract class SpecialAbilityBehavior : MonoBehaviour
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected void PlayAbilitySounds()
     {
-
+        m_AbilityOwner.GetComponent<AudioSource>().PlayOneShot(m_AbilityConfig.GetAbilitySound());
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

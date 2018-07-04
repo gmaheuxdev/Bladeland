@@ -5,37 +5,33 @@ using UnityEngine.AI;
 
 public class CharacterMovementComponent : MonoBehaviour
 {
-    //Member variables
-    private NavMeshAgent m_CachedPlayerNavMeshAgent;
-    private CharacterStatsComponent m_CachedPlayerStatsComponent;
+    //Serialized variables
+    [SerializeField] float m_MovingTurnSpeed;
+    [SerializeField] float m_StationaryTurnSpeed;
+    [SerializeField] float m_MovingSpeedMultiplier;
+    [SerializeField] float m_AnimationSpeedMultiplier;
     
-    //Animation stuff
-    [SerializeField]  float m_MovingTurnSpeed = 360;
-    [SerializeField]  float m_StationaryTurnSpeed = 180;
-    [SerializeField]  float m_MovingSpeedMultiplier;
-    [SerializeField]  float m_AnimationSpeedMultiplier;
-
+    //Cached Components
+    private NavMeshAgent m_CachedPlayerNavMeshAgent;
+    private Animator m_CachedAnimator;
+    
+    //Other member variables
     Rigidbody m_Rigidbody;
-    Animator m_Animator;
     float m_TurnAmount;
     float m_ForwardAmount;
-    Vector3 m_GroundNormal;
 
+    //Getters and Setters
     NavMeshAgent GetCharacterNavMeshAgent() {return m_CachedPlayerNavMeshAgent;}
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     void Start()
     {
-        m_Animator = GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_CachedPlayerNavMeshAgent = GetComponent<NavMeshAgent>();
-        m_CachedPlayerStatsComponent = GetComponent<CharacterStatsComponent>();
-
-        m_CachedPlayerNavMeshAgent.updateRotation = false;
-        m_CachedPlayerNavMeshAgent.updatePosition = true;
-        m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+        m_CachedAnimator = GetComponent<Animator>();
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
     void Update()
     {
         if (m_CachedPlayerNavMeshAgent.remainingDistance > m_CachedPlayerNavMeshAgent.stoppingDistance)
@@ -44,27 +40,37 @@ public class CharacterMovementComponent : MonoBehaviour
         }
         else
         {
-            Move(Vector3.zero);
+            StopMovement();
         }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void StopMovement()
+    {
+        m_CachedAnimator.SetBool("IsRunning", false);
+        Move(Vector3.zero);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void BeginMoveTo(Vector3 newDestination)
     {
         m_CachedPlayerNavMeshAgent.SetDestination(newDestination);
-    }
+        m_CachedAnimator.SetBool("IsRunning",true);
+   }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Move(Vector3 move)
     {
-        if (move.magnitude > 1f) move.Normalize();
+        if (move.magnitude > 1f) //Don't normalize when staying still
+        {
+            move.Normalize();
+        }
+        
         move = transform.InverseTransformDirection(move);
-        move = Vector3.ProjectOnPlane(move, m_GroundNormal);
         m_TurnAmount = Mathf.Atan2(move.x, move.z);
         m_ForwardAmount = move.z;
 
         ApplyExtraTurnRotation();
-        UpdateAnimator();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,24 +81,15 @@ public class CharacterMovementComponent : MonoBehaviour
         transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void UpdateAnimator()
-    {
-        m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
-        m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
-        m_Animator.speed = m_AnimationSpeedMultiplier;
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void OnAnimatorMove()//Callback
     {
         if (Time.deltaTime > 0)
         {
-            Vector3 velocity = (m_Animator.deltaPosition * m_MovingSpeedMultiplier) / Time.deltaTime;
+            Vector3 velocity = (m_CachedAnimator.deltaPosition * m_MovingSpeedMultiplier) / Time.deltaTime;
             velocity.y = m_Rigidbody.velocity.y;
             m_Rigidbody.velocity = velocity;
         }
     }
-
 }//End class
 
