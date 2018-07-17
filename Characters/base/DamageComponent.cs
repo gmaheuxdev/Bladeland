@@ -12,6 +12,7 @@ public class DamageComponent : MonoBehaviour
     AudioSource m_CachedAudioSource;
     Animator m_CachedAnimatorComponent;
     GameObject m_CachedPlayerGameObject; //Only on enemy
+    CharacterTeamEnum m_CurrentTeam;
 
     //Serialized fields
     [SerializeField] private Image m_HealthBar;
@@ -19,9 +20,14 @@ public class DamageComponent : MonoBehaviour
     [SerializeField] private AudioClip m_DeathSound;
     [SerializeField] private AudioClip m_HurtSound;
 
+    //Events
     public delegate void XPGainDelegate(int XPAmount);
     public event XPGainDelegate XpGainObservers;
 
+    //Getters and Setters
+    public CharacterTeamEnum GetCurrentTeam() { return m_CurrentTeam;}
+    public void SetCurrentTeam(CharacterTeamEnum newTeamEnum) { m_CurrentTeam = newTeamEnum;}
+    
     //////////////////////////////////////////////////////////////////////////////////////////////
     void Start()
     {

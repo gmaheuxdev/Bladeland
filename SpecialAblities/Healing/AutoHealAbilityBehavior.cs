@@ -11,7 +11,7 @@ public class AutoHealAbilityBehavior : SpecialAbilityBehavior
     {
         m_CachedDamageComponent = GetComponent<DamageComponent>();
     }
-    
+
     public override void Use()
     {
         PlayAbilitySounds();
@@ -22,5 +22,10 @@ public class AutoHealAbilityBehavior : SpecialAbilityBehavior
     {
         float totalHealing = (m_AbilityConfig as AutoHealAbilityConfig).GetHealingAmount();
         m_CachedDamageComponent.TakeHealing(totalHealing);
+    }
+
+    public override void ApplyAbilityEffect()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -10,8 +10,14 @@ public class AoeAttackBehavior : SpecialAbilityBehavior
         RaycastHit[] sphereCastHitList = Physics.SphereCastAll(gameObject.transform.position, (m_AbilityConfig as AoeAttackConfig).GetAoeRadius(), Vector3.up);
         ApplyRadialDamage(sphereCastHitList);
         PlayAbilityEffects();
-        PlayAbilityAnimation();
+        SetAbilityAnimationOverride(m_AbilityConfig.GetAbilityAnimationOverride());
         PlayAbilitySounds();
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+    public override void ApplyAbilityEffect()
+    {
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -34,7 +40,4 @@ public class AoeAttackBehavior : SpecialAbilityBehavior
     {
         Gizmos.DrawWireSphere(gameObject.transform.position, (m_AbilityConfig as AoeAttackConfig).GetAoeRadius());
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-
 }

@@ -3,6 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public struct Timer
+{
+   public float m_TimeLeft;
+   public float m_StartTime;
+   private bool m_IsStarted;
+   private bool m_IsFinished;
+
+    public bool IsFinished()
+    {
+        if (m_IsStarted && m_TimeLeft <= 0) { return true;}
+        return false;
+    } 
+
+    public bool IsStarted(){return m_IsStarted;}
+    public void StopTimer() { m_IsStarted = false;}
+    public void StartTimer(float duration) {m_IsStarted = true; m_StartTime = duration; m_TimeLeft = m_StartTime;}
+};
+
 public class CharacterMovementComponent : MonoBehaviour
 {
     //Serialized variables
@@ -19,6 +37,12 @@ public class CharacterMovementComponent : MonoBehaviour
     Rigidbody m_Rigidbody;
     float m_TurnAmount;
     float m_ForwardAmount;
+    Timer m_MovementSpeedModifierTimer;
+    
+    
+    //movementSpeedModifierstuff...clean that
+    float m_BaseNavAgentMaxSpeed;
+    float m_BaseAnimatorSpeed;
 
     //Getters and Setters
     NavMeshAgent GetCharacterNavMeshAgent() {return m_CachedPlayerNavMeshAgent;}
@@ -29,6 +53,9 @@ public class CharacterMovementComponent : MonoBehaviour
         m_Rigidbody = GetComponent<Rigidbody>();
         m_CachedPlayerNavMeshAgent = GetComponent<NavMeshAgent>();
         m_CachedAnimator = GetComponent<Animator>();
+
+        m_BaseAnimatorSpeed = m_CachedAnimator.speed;
+        m_BaseNavAgentMaxSpeed = m_CachedPlayerNavMeshAgent.speed;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,6 +68,18 @@ public class CharacterMovementComponent : MonoBehaviour
         else
         {
             StopMovement();
+        }
+
+        if (m_MovementSpeedModifierTimer.IsStarted())
+        {
+            m_MovementSpeedModifierTimer.m_TimeLeft -= Time.deltaTime;
+
+            if(m_MovementSpeedModifierTimer.IsFinished())
+            {
+                m_MovementSpeedModifierTimer.StopTimer();
+                m_CachedAnimator.speed = m_BaseAnimatorSpeed;
+                m_CachedPlayerNavMeshAgent.speed = m_BaseNavAgentMaxSpeed;
+            }
         }
     }
 
@@ -91,5 +130,13 @@ public class CharacterMovementComponent : MonoBehaviour
             m_Rigidbody.velocity = velocity;
         }
     }
+
+    public void ApplyMovementSpeedModifier(float percentage,float duration)
+    {
+        m_CachedPlayerNavMeshAgent.speed *= percentage;
+        m_CachedAnimator.speed *= percentage;
+        m_MovementSpeedModifierTimer.StartTimer(duration);
+    }
+
 }//End class
 

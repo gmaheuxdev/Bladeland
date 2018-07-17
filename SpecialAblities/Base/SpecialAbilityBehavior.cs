@@ -7,9 +7,12 @@ public abstract class SpecialAbilityBehavior : MonoBehaviour
 {
     protected SpecialAbilityConfig m_AbilityConfig;
     protected GameObject m_AbilityOwner;
-
-    public abstract void Use(); //TODO: BETTER SOLUTION?? want to enforce when needed and not enforce when not needed
+    protected Animator m_AbilityOwnerAnimator;
+    
+    public abstract void Use();
+    public abstract void ApplyAbilityEffect();
     public void SetAbilityConfig(SpecialAbilityConfig newAbilityConfig) { m_AbilityConfig = newAbilityConfig; }
+    public SpecialAbilityConfig GetAbilityConfig() { return m_AbilityConfig;}
     public void SetAbilityOwner(GameObject newAbilityOwner) { m_AbilityOwner = newAbilityOwner;}
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,14 +25,24 @@ public abstract class SpecialAbilityBehavior : MonoBehaviour
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    protected void PlayAbilitySounds()
+    public void PlayAbilitySounds()
     {
         m_AbilityOwner.GetComponent<AudioSource>().PlayOneShot(m_AbilityConfig.GetAbilitySound());
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    protected void PlayAbilityAnimation()
+    protected void SetAbilityAnimationOverride(AnimatorOverrideController abilityOverrideController)
     {
-
+        m_AbilityOwnerAnimator = m_AbilityOwner.GetComponent<Animator>();
+        m_AbilityOwnerAnimator.runtimeAnimatorController = abilityOverrideController;
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void OnMeleeStunAbilityAnimationFinished()
+    {
+        m_AbilityOwner.GetComponent<Animator>().SetBool("IsDoSpecialAbility", false);
+        ApplyAbilityEffect();
+    }
+
 }

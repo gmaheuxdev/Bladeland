@@ -8,16 +8,20 @@ public class PlayerController : MonoBehaviour
     //Member variables
     CameraRayCaster m_CachedCameraRaycaster;
     SpecialAbiltyComponent m_CachedSpecialAbilityComponent;
-    CharacterMovementComponent m_CachedPlayerMovementComponent;
-    WeaponComponent m_CachedPlayerWeaponComponent;
-   
+    CharacterMovementComponent m_CachedMovementComponent;
+    WeaponComponent m_CachedWeaponComponent;
+    DamageComponent m_CachedDamageComponent;
+       
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void Start ()
     {
         m_CachedCameraRaycaster = Camera.main.GetComponent<CameraRayCaster>();
         m_CachedSpecialAbilityComponent = GetComponent<SpecialAbiltyComponent>();
-        m_CachedPlayerMovementComponent = GetComponent<CharacterMovementComponent>();
-        m_CachedPlayerWeaponComponent = GetComponent<WeaponComponent>();
+        m_CachedMovementComponent = GetComponent<CharacterMovementComponent>();
+        m_CachedWeaponComponent = GetComponent<WeaponComponent>();
+        m_CachedDamageComponent = GetComponent<DamageComponent>();
+
+        m_CachedDamageComponent.SetCurrentTeam(CharacterTeamEnum.CharacterTeamEnum_Player);
     }
          
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,17 +65,17 @@ public class PlayerController : MonoBehaviour
         if ((int)m_CachedCameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Enemy)
         {
             GameObject currentEnemyTarget = m_CachedCameraRaycaster.GetCurrentActiveHit().collider.gameObject;
-            m_CachedPlayerWeaponComponent.SetCurrentTarget(currentEnemyTarget);
+            m_CachedWeaponComponent.SetCurrentTarget(currentEnemyTarget);
 
-            if (m_CachedPlayerWeaponComponent.IsTargetInWeaponRange())
+            if (m_CachedWeaponComponent.IsTargetInWeaponRange())
             {
-                m_CachedPlayerWeaponComponent.WeaponAttack();
+               // m_CachedPlayerWeaponComponent.WeaponAttack();
             }
         }
         else if((int)m_CachedCameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable)
         {
             Vector3 TargetPosition = m_CachedCameraRaycaster.GetCurrentActiveHit().point;
-            m_CachedPlayerMovementComponent.BeginMoveTo(TargetPosition);
+            m_CachedMovementComponent.BeginMoveTo(TargetPosition);
         }
         else
         {
@@ -84,7 +88,7 @@ public class PlayerController : MonoBehaviour
         if ((int)m_CachedCameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable)
         {
             Vector3 TargetPosition = m_CachedCameraRaycaster.GetCurrentActiveHit().point;
-            m_CachedPlayerMovementComponent.BeginMoveTo(TargetPosition);
+            m_CachedMovementComponent.BeginMoveTo(TargetPosition);
         }
     }
 

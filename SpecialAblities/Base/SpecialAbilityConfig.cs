@@ -9,14 +9,21 @@ public abstract class SpecialAbilityConfig : ScriptableObject
     [SerializeField] float m_AbilityManaCost;
     [SerializeField] GameObject m_AbilityParticleSystemPrefab;
     [SerializeField] AudioClip m_AbilitySound;
+    [SerializeField] AnimatorOverrideController m_AbilityAnimationOverride;
+    [SerializeField] GameObject m_ProjectileToSpawn;
+    [SerializeField] GameObject m_ZoneOfEffect;
     [SerializeField] AnimationClip m_AbilityAnimation;
-    protected SpecialAbilityBehavior m_AbilityBehavior;
+
+    SpecialAbilityBehavior m_AbilityBehavior;
     
     //Getters and setters
     public float GetAbilityManaCost() { return m_AbilityManaCost; }
     public GameObject GetAbilityParticleSystemPrefab() { return m_AbilityParticleSystemPrefab; }
     public AudioClip GetAbilitySound() { return m_AbilitySound; }
-    public AnimationClip GetAbilityAnimation() { return m_AbilityAnimation;}
+    public AnimatorOverrideController GetAbilityAnimationOverride() { return m_AbilityAnimationOverride; }
+    public GameObject GetProjectileToSpawn() { return m_ProjectileToSpawn;}
+    public GameObject GetZoneOfEffect() { return m_ZoneOfEffect;}
+    public AnimationClip GetAbilityAnimation() {return m_AbilityAnimation;}
 
     //Abstract methods
     public abstract SpecialAbilityBehavior AttachAbilityBehaviorTo(GameObject gameObjectToAttachTo);

@@ -5,18 +5,27 @@ using UnityEngine;
 
 public class PowerAttackBehavior : SpecialAbilityBehavior
 {
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public override void Use()
     {
-        PlayAbilityEffects();
-        PlayAbilitySounds();
-        PlayAbilityAnimation();
-        ApplyPowerAttackDamage();
+        SetAbilityAnimationOverride(m_AbilityConfig.GetAbilityAnimationOverride());
+        m_AbilityOwner.GetComponent<Animator>().SetBool("IsDoSpecialAbility", true);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void ApplyPowerAttackDamage()
+    void OnPowerAttackAnimationFinished()
     {
-       // float totalDamage = (m_AbilityConfig as PowerAttackConfig).GetPowerAttackDamage();
-       // DamageComponent targetDamageComponent = target.GetComponent<DamageComponent>();
+        m_AbilityOwner.GetComponent<Animator>().SetBool("IsDoSpecialAbility", false);
+        m_AbilityOwner.GetComponent<LightningBlastBehavior>().ApplyAbilityEffect();
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public override void ApplyAbilityEffect()
+    {
+        GameObject abilityTarget = m_AbilityOwner.GetComponent<WeaponComponent>().GetCurrentTarget();
+        float totalDamage = (m_AbilityConfig as PowerAttackConfig).GetPowerAttackDamage();
+        DamageComponent targetDamageComponent = abilityTarget.GetComponent<DamageComponent>();
+        targetDamageComponent.TakeDamage(totalDamage);
+        PlayAbilitySounds();
     }
 }
