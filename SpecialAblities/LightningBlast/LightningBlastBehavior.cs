@@ -11,12 +11,6 @@ public class LightningBlastBehavior : SpecialAbilityBehavior
     //Member Variables
     Vector3 m_ProjectileSpawnOffset = Vector3.up;
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public override void Use() //optional target
-    {
-        SetAbilityAnimationOverride(m_AbilityConfig.GetAbilityAnimationOverride());
-        m_AbilityOwner.GetComponent<Animator>().SetBool("IsDoSpecialAbility", true);
-    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public override void ApplyAbilityEffect()
@@ -32,12 +26,5 @@ public class LightningBlastBehavior : SpecialAbilityBehavior
 
         m_CachedProjectileBehavior = spawnedProjectile.GetComponent<ProjectileBehavior>();
         m_CachedProjectileBehavior.SetProjectileDirection(transform.forward);
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void OnLightBlastAnimationFinished()
-    {
-        m_AbilityOwner.GetComponent<Animator>().SetBool("IsDoSpecialAbility", false);
-        m_AbilityOwner.GetComponent<LightningBlastBehavior>().ApplyAbilityEffect();
     }
 }

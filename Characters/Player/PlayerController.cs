@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
 
             if (m_CachedWeaponComponent.IsTargetInWeaponRange())
             {
-               // m_CachedPlayerWeaponComponent.WeaponAttack();
+               m_CachedWeaponComponent.WeaponAttack();
             }
         }
         else if((int)m_CachedCameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable)

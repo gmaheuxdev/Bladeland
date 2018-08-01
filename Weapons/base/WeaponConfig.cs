@@ -13,6 +13,7 @@ public class WeaponConfig : ScriptableObject
     [SerializeField] private float m_WeaponAttackDamage;
     [SerializeField] private float m_WeaponTimeBetweenAttacks;
     [SerializeField] private AudioClip m_WeaponAttackSound;
+    [SerializeField] private AnimatorOverrideController m_WeaponAnimatorOverride;
 
     //Getters and Setters
     public float GetWeaponTimeBetweenAttacks() {return m_WeaponTimeBetweenAttacks;}
@@ -22,8 +23,8 @@ public class WeaponConfig : ScriptableObject
     public AnimationClip GetWeaponAttackAnimation(){return m_WeaponAttackAnimation;}
     public GameObject GetEquippedWeaponPosRotPreset(){return m_EquippedWeaponPosRotPreset;}
     public AudioClip GetWeaponAttackSound() {return m_WeaponAttackSound;}
-
-
+    public AnimatorOverrideController GetWeaponAnimatorOverride() { return m_WeaponAnimatorOverride;}
+    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void ClearAnimationEvents() //Prevents unwanted events baked into the assets #FreeAssetsProblems
     {

@@ -16,13 +16,6 @@ public class SlowAbilityBehavior : SpecialAbilityBehavior
     }
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public override void Use()
-    {
-        SetAbilityAnimationOverride(m_AbilityConfig.GetAbilityAnimationOverride());
-        m_AbilityOwner.GetComponent<Animator>().SetBool("IsDoSpecialAbility", true);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     public override void ApplyAbilityEffect()
     {
         SpawnAbilityZoneOfEffect();
@@ -33,18 +26,11 @@ public class SlowAbilityBehavior : SpecialAbilityBehavior
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void SpawnAbilityZoneOfEffect()
     {
-        m_AbilityZoneOfEffect = Instantiate(m_AbilityConfig.GetZoneOfEffect(), m_CachedPlayerGameObject.transform.position, Quaternion.identity);
-        Vector3 newScale = new Vector3((m_AbilityConfig as SlowAbilityConfig).GetAbilityEffectRadius() * 2,
-                                        m_AbilityZoneOfEffect.transform.localScale.y,
-                                        (m_AbilityConfig as SlowAbilityConfig).GetAbilityEffectRadius() * 2);
+     //   m_AbilityZoneOfEffect = Instantiate(m_AbilityConfig.GetZoneOfEffect(), m_CachedPlayerGameObject.transform.position, Quaternion.identity);
+      //  Vector3 newScale = new Vector3((m_AbilityConfig as SlowAbilityConfig).GetAbilityEffectRadius() * 2,
+         //                               m_AbilityZoneOfEffect.transform.localScale.y,
+         //                               (m_AbilityConfig as SlowAbilityConfig).GetAbilityEffectRadius() * 2);
 
-        m_AbilityZoneOfEffect.transform.localScale = newScale;
+      //  m_AbilityZoneOfEffect.transform.localScale = newScale;
    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void OnSlowAbilityAnimationFinished()
-    {
-        m_AbilityOwner.GetComponent<Animator>().SetBool("IsDoSpecialAbility", false);
-        m_AbilityOwner.GetComponent<SlowAbilityBehavior>().ApplyAbilityEffect();
-    }
 }

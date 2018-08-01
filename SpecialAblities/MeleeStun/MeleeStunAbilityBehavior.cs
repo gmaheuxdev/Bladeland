@@ -5,13 +5,6 @@ using UnityEngine;
 
 public class MeleeStunAbilityBehavior : SpecialAbilityBehavior
 {
-    public override void Use()
-    {
-        SetAbilityAnimationOverride(m_AbilityConfig.GetAbilityAnimationOverride());
-        m_AbilityOwner.GetComponent<Animator>().SetBool("IsDoSpecialAbility", true);
-    }
-
-    
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     public override void ApplyAbilityEffect()
