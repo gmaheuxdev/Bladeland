@@ -22,4 +22,9 @@ public class SlowAbilityConfig : SpecialAbilityConfig
     {
         return gameObjectToAttachTo.AddComponent<SlowAbilityBehavior>();
     }
+
+    public override void DetachAbilityBehavior(GameObject gameObjectToDetachFrom)
+    {
+        Destroy(gameObjectToDetachFrom.GetComponent<SlowAbilityBehavior>());
+    }
 }

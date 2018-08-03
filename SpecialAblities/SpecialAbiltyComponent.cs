@@ -20,6 +20,7 @@ public class SpecialAbiltyComponent : MonoBehaviour
         }
     }
 
+    
     ////////////////////////////////////////////////////////////////////////
     public void UseSpecialAbility(int abilityIndex)
     {

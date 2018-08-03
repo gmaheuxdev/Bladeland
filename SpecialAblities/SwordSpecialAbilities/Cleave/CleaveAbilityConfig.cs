@@ -15,4 +15,9 @@ public class CleaveAbilityConfig : SpecialAbilityConfig
     {
         return gameObjectToAttachTo.AddComponent<CleaveAbilityBehavior>();
     }
+
+    public override void DetachAbilityBehavior(GameObject gameObjectToDetachFrom)
+    {
+        Destroy(gameObjectToDetachFrom.GetComponent<CleaveAbilityBehavior>());
+    }
 }

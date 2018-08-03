@@ -25,15 +25,14 @@ public abstract class SpecialAbilityBehavior : MonoBehaviour
 
     public void Use()
     {
+        m_AbilityOwnerAnimator.SetBool("IsDoSpecialAbility", true);
+        m_AbilityOwnerAnimator.runtimeAnimatorController = m_AbilityConfig.GetAbilityAnimationOverride();
+
         CameraRayCaster cameraRaycaster = Camera.main.GetComponent<CameraRayCaster>();
         if ((int)cameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Enemy)
         {
            m_AbilityCurrentTarget = cameraRaycaster.GetCurrentActiveHit().collider.gameObject;
         }
-        
-        m_AbilityConfig.GetAbilityAnimation().events[0].objectReferenceParameter = m_AbilityOwner;
-        m_AbilityOwnerAnimator.SetBool("IsDoSpecialAbility", true);
-        m_AbilityOwnerAnimator.runtimeAnimatorController = m_AbilityConfig.GetAbilityAnimationOverride();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,7 +54,7 @@ public abstract class SpecialAbilityBehavior : MonoBehaviour
     void OnAbilityAnimationFinished()
     {
         m_AbilityOwnerAnimator.SetBool("IsDoSpecialAbility", false);
-        m_AbilityOwnerAnimator.runtimeAnimatorController = m_AbilityOwner.GetComponent<WeaponComponent>().GetEquippedWeaponConfig().GetWeaponAnimatorOverride();
+        m_AbilityOwnerAnimator.runtimeAnimatorController = m_AbilityOwner.GetComponent<WeaponComponent>().GetActiveWeaponConfig().GetWeaponAnimatorOverride();
         ApplyAbilityEffect();
     }
 }

@@ -28,6 +28,7 @@ public abstract class SpecialAbilityConfig : ScriptableObject
  
     //Abstract methods
     public abstract SpecialAbilityBehavior AttachAbilityBehaviorTo(GameObject gameObjectToAttachTo);
+    public abstract void DetachAbilityBehavior(GameObject gameObjectToDetachFrom);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void SetupAbility(GameObject gameObjectToAttachTo)
@@ -36,7 +37,7 @@ public abstract class SpecialAbilityConfig : ScriptableObject
         m_AbilityBehavior.SetAbilityConfig(this);
         m_AbilityBehavior.SetAbilityOwner(gameObjectToAttachTo);
     }
-
+    
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void UseSpecialAbility()
     {

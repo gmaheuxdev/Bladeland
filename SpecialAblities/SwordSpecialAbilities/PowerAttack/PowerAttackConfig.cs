@@ -15,4 +15,9 @@ public class PowerAttackConfig : SpecialAbilityConfig
     {
         return gameObjectToAttachTo.AddComponent<PowerAttackBehavior>();
     }
+
+    public override void DetachAbilityBehavior(GameObject gameObjectToDetachFrom)
+    {
+        Destroy(gameObjectToDetachFrom.GetComponent<PowerAttackBehavior>());
+    }
 }

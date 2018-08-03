@@ -14,4 +14,9 @@ public class MeleeStunAbilityConfig : SpecialAbilityConfig
     {
         return gameObjectToAttachTo.AddComponent<MeleeStunAbilityBehavior>();
     }
+
+    public override void DetachAbilityBehavior(GameObject gameObjectToDetachFrom)
+    {
+        Destroy(gameObjectToDetachFrom.GetComponent<MeleeStunAbilityBehavior>());
+    }
 }

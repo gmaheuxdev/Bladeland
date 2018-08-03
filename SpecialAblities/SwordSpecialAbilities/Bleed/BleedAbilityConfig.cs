@@ -19,4 +19,9 @@ public class BleedAbilityConfig : SpecialAbilityConfig
     {
         return gameObjectToAttachTo.AddComponent<BleedAbilityBehavior>();
     }
+
+    public override void DetachAbilityBehavior(GameObject gameObjectToDetachFrom)
+    {
+        Destroy(gameObjectToDetachFrom.GetComponent<BleedAbilityBehavior>());
+    }
 }

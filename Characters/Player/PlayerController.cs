@@ -7,20 +7,18 @@ public class PlayerController : MonoBehaviour
 {
     //Member variables
     CameraRayCaster m_CachedCameraRaycaster;
-    SpecialAbiltyComponent m_CachedSpecialAbilityComponent;
     CharacterMovementComponent m_CachedMovementComponent;
     WeaponComponent m_CachedWeaponComponent;
     DamageComponent m_CachedDamageComponent;
+    SpecialAbilityConfig m_ActiveAbility;
        
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     void Start ()
     {
         m_CachedCameraRaycaster = Camera.main.GetComponent<CameraRayCaster>();
-        m_CachedSpecialAbilityComponent = GetComponent<SpecialAbiltyComponent>();
         m_CachedMovementComponent = GetComponent<CharacterMovementComponent>();
         m_CachedWeaponComponent = GetComponent<WeaponComponent>();
         m_CachedDamageComponent = GetComponent<DamageComponent>();
-
         m_CachedDamageComponent.SetCurrentTeam(CharacterTeamEnum.CharacterTeamEnum_Player);
     }
          
@@ -29,7 +27,7 @@ public class PlayerController : MonoBehaviour
     {
         CheckForAbilityInput();
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0)) //Mouse left
         {
             ManageMouseMovement();
         }
@@ -38,6 +36,11 @@ public class PlayerController : MonoBehaviour
         {
             ManageLeftMouseClick();
         }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            m_CachedWeaponComponent.CycleActiveWeapon();
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,18 +48,15 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            m_CachedSpecialAbilityComponent.UseSpecialAbility(0);
+            if(m_ActiveAbility != null)
+            {
+                m_ActiveAbility.UseSpecialAbility();
+            }
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(1); }
-        if (Input.GetKeyDown(KeyCode.Alpha2)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(2); }
-        if (Input.GetKeyDown(KeyCode.Alpha3)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(3); }
-        if (Input.GetKeyDown(KeyCode.Alpha4)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(4); }
-        if (Input.GetKeyDown(KeyCode.Alpha5)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(5); }
-        if (Input.GetKeyDown(KeyCode.Alpha6)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(6); }
-        if (Input.GetKeyDown(KeyCode.Alpha7)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(7); }
-        if (Input.GetKeyDown(KeyCode.Alpha8)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(8); }
-        if (Input.GetKeyDown(KeyCode.Alpha9)){ m_CachedSpecialAbilityComponent.UseSpecialAbility(9); }
+                
+        if (Input.GetKeyDown(KeyCode.Alpha1)){ m_ActiveAbility = m_CachedWeaponComponent.GetWeaponSpecialAbilities()[0];}
+        if (Input.GetKeyDown(KeyCode.Alpha2)){ m_ActiveAbility = m_CachedWeaponComponent.GetWeaponSpecialAbilities()[1];}
+        if (Input.GetKeyDown(KeyCode.Alpha3)){ m_ActiveAbility = m_CachedWeaponComponent.GetWeaponSpecialAbilities()[2];}
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

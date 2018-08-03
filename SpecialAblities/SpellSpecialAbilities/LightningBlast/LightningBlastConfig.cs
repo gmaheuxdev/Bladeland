@@ -15,4 +15,9 @@ public class LightningBlastConfig : SpecialAbilityConfig
     {
         return gameObjectToAttachTo.AddComponent<LightningBlastBehavior>();
     }
+
+    public override void DetachAbilityBehavior(GameObject gameObjectToDetachFrom)
+    {
+        Destroy(gameObjectToDetachFrom.GetComponent<LightningBlastBehavior>());
+    }
 }
