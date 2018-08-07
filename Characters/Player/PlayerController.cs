@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+enum InputContextEnum { InputContextEnum_NormalMode, InputContextEnum_AimMode };
+
 public class PlayerController : MonoBehaviour
 {
     //Member variables
@@ -11,9 +13,12 @@ public class PlayerController : MonoBehaviour
     WeaponComponent m_CachedWeaponComponent;
     DamageComponent m_CachedDamageComponent;
     SpecialAbilityConfig m_ActiveAbility;
-       
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void Start ()
+    Vector3 m_ClickTargetPosition;
+    InputContextEnum m_InputContext;
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void Start()
     {
         m_CachedCameraRaycaster = Camera.main.GetComponent<CameraRayCaster>();
         m_CachedMovementComponent = GetComponent<CharacterMovementComponent>();
@@ -21,25 +26,42 @@ public class PlayerController : MonoBehaviour
         m_CachedDamageComponent = GetComponent<DamageComponent>();
         m_CachedDamageComponent.SetCurrentTeam(CharacterTeamEnum.CharacterTeamEnum_Player);
     }
-         
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void Update ()
+    void Update()
     {
         CheckForAbilityInput();
 
-        if (Input.GetMouseButton(0)) //Mouse left
+        if (m_InputContext == InputContextEnum.InputContextEnum_NormalMode)
         {
-            ManageMouseMovement();
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0))
+            {
+                DoNormalModeLeftClick();
+            }
         }
 
-        if(Input.GetMouseButtonUp(0))
+        else if(m_InputContext == InputContextEnum.InputContextEnum_AimMode)
         {
-            ManageLeftMouseClick();
+           if(Input.GetMouseButtonDown(0))
+            {
+                DoAimModeLeftClick();
+           }
         }
-
+ 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             m_CachedWeaponComponent.CycleActiveWeapon();
+        }
+
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if(m_InputContext != InputContextEnum.InputContextEnum_AimMode) { m_InputContext = InputContextEnum.InputContextEnum_AimMode;}
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            m_CachedMovementComponent.SetIsAimMode(false);
+            m_InputContext = InputContextEnum.InputContextEnum_NormalMode;
         }
     }
 
@@ -60,8 +82,10 @@ public class PlayerController : MonoBehaviour
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void ManageLeftMouseClick()
+    private void DoNormalModeLeftClick()
     {
+        m_ClickTargetPosition = m_CachedCameraRaycaster.GetCurrentActiveHit().point;
+
         if ((int)m_CachedCameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Enemy)
         {
             GameObject currentEnemyTarget = m_CachedCameraRaycaster.GetCurrentActiveHit().collider.gameObject;
@@ -74,22 +98,15 @@ public class PlayerController : MonoBehaviour
         }
         else if((int)m_CachedCameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable)
         {
-            Vector3 TargetPosition = m_CachedCameraRaycaster.GetCurrentActiveHit().point;
-            m_CachedMovementComponent.BeginMoveTo(TargetPosition);
-        }
-        else
-        {
-            ManageMouseMovement();
+            m_CachedMovementComponent.BeginMoveTo(m_ClickTargetPosition);
         }
     }
 
-    private void ManageMouseMovement()
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void DoAimModeLeftClick()
     {
-        if ((int)m_CachedCameraRaycaster.GetCurrentSeenLayerEnum() == (int)CameraRayCastLayerEnum.CameraRayCastLayerEnum_Walkable)
-        {
-            Vector3 TargetPosition = m_CachedCameraRaycaster.GetCurrentActiveHit().point;
-            m_CachedMovementComponent.BeginMoveTo(TargetPosition);
-        }
+        m_CachedMovementComponent.BeginRotateTo(m_CachedCameraRaycaster.GetCurrentActiveHit().point);
+        m_CachedWeaponComponent.WeaponAttack();
     }
 
 }//class end
