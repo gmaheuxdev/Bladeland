@@ -50,11 +50,5 @@ public abstract class SpecialAbilityBehavior : MonoBehaviour
         m_AbilityOwner.GetComponent<AudioSource>().PlayOneShot(m_AbilityConfig.GetAbilitySound());
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    void OnAbilityAnimationFinished()
-    {
-        m_AbilityOwnerAnimator.SetBool("IsDoSpecialAbility", false);
-        m_AbilityOwnerAnimator.runtimeAnimatorController = m_AbilityOwner.GetComponent<WeaponComponent>().GetActiveWeaponConfig().GetWeaponAnimatorOverride();
-        ApplyAbilityEffect();
-    }
+  
 }

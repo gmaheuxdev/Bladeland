@@ -6,9 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = ("BowWeapon"))]
 public class BowWeaponConfig : WeaponConfig
 {
-    [SerializeField] GameObject m_ProjectilePrefab;
+    [SerializeField] ProjectileConfig m_BowProjectileConfig;
     
-    public GameObject GetProjectilePrefab() {return m_ProjectilePrefab;}
+    public ProjectileConfig GetProjectileConfig() {return m_BowProjectileConfig;}
 
     public override WeaponBehavior AttachWeaponBehaviorTo(GameObject gameObjectToAttachTo)
     {

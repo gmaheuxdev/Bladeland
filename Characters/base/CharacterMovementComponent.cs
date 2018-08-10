@@ -29,6 +29,7 @@ public class CharacterMovementComponent : MonoBehaviour
     
     //Other member variables
     Timer m_MovementSpeedModifierTimer;
+    Timer m_AttackSpeedModifierTimer;
     private bool m_IsAimMode;
         
     //movementSpeedModifierstuff...clean that
@@ -72,6 +73,7 @@ public class CharacterMovementComponent : MonoBehaviour
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     private void UpdateTimers()
     {
+        //Movement speed timer
         if (m_MovementSpeedModifierTimer.IsStarted())
         {
             m_MovementSpeedModifierTimer.m_TimeLeft -= Time.deltaTime;
@@ -80,6 +82,18 @@ public class CharacterMovementComponent : MonoBehaviour
             {
                 m_MovementSpeedModifierTimer.StopTimer();
                 m_CachedPlayerNavMeshAgent.speed = m_BaseNavAgentMaxSpeed;
+            }
+        }
+
+        //AttackSpeed timer
+        if (m_AttackSpeedModifierTimer.IsStarted())
+        {
+            m_AttackSpeedModifierTimer.m_TimeLeft -= Time.deltaTime;
+
+            if (m_AttackSpeedModifierTimer.IsFinished())
+            {
+                m_AttackSpeedModifierTimer.StopTimer();
+                m_CachedAnimator.SetFloat("NormalAttackSpeedModifier", 1f);
             }
         }
     }
@@ -111,6 +125,14 @@ public class CharacterMovementComponent : MonoBehaviour
         m_CachedAnimator.speed *= percentage;
         m_MovementSpeedModifierTimer.StartTimer(duration);
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void ApplyAttackSpeedModifier(float timeActive)
+    {
+        m_CachedAnimator.SetFloat("NormalAttackSpeedModifier", 2f);
+        m_AttackSpeedModifierTimer.StartTimer(timeActive);
+    }
+
 
 }//End class
 

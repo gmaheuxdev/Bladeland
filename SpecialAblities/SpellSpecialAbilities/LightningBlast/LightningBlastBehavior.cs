@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class LightningBlastBehavior : SpecialAbilityBehavior
 {
-    //Cached Components
-    ProjectileBehavior m_CachedProjectileBehavior;
-
     //Member Variables
     Vector3 m_ProjectileSpawnOffset = Vector3.up;
 
@@ -16,15 +13,20 @@ public class LightningBlastBehavior : SpecialAbilityBehavior
     public override void ApplyAbilityEffect()
     {
         SetupProjectile();
-        PlayAbilitySounds();
+       // PlayAbilitySounds();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void SetupProjectile()
     {
-        GameObject spawnedProjectile = Instantiate(m_AbilityConfig.GetProjectileToSpawn(), transform.position + m_ProjectileSpawnOffset, Quaternion.identity);
+        ProjectileConfig blastProjectileConfig = (m_AbilityConfig as LightningBlastConfig).GetBlastProjectileConfig();
+        GameObject spawnedProjectile = Instantiate(blastProjectileConfig.GetProjectilePrefab(), transform.position + m_ProjectileSpawnOffset, gameObject.transform.rotation);
+    }
 
-        m_CachedProjectileBehavior = spawnedProjectile.GetComponent<ProjectileBehavior>();
-        m_CachedProjectileBehavior.SetProjectileDirection(transform.forward);
+    void OnLightningBlastAnimationFinished()
+    {
+        m_AbilityOwnerAnimator.SetBool("IsDoSpecialAbility", false);
+        m_AbilityOwnerAnimator.runtimeAnimatorController = m_AbilityOwner.GetComponent<WeaponComponent>().GetActiveWeaponConfig().GetWeaponAnimatorOverride();
+        ApplyAbilityEffect();
     }
 }

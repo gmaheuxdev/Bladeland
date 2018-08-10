@@ -7,6 +7,18 @@ public class SlowingShotAbilityBehavior : SpecialAbilityBehavior
 {
     public override void ApplyAbilityEffect()
     {
-        print("Now doing slowing shot behavior");
+        ProjectileConfig projectileConfig = (m_AbilityConfig as SlowingShotAbilityConfig).GetProjectileConfig();
+        
+        //REMEMBER TO REMOVE GETPROJECTILETOSPAWN
+        GameObject spawnedProjectile = Instantiate(projectileConfig.GetProjectilePrefab(), transform.position,transform.rotation);
+        projectileConfig.SetupProjectile(spawnedProjectile);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    void OnSlowingShotAnimationFinished()
+    {
+        m_AbilityOwnerAnimator.SetBool("IsDoSpecialAbility", false);
+        m_AbilityOwnerAnimator.runtimeAnimatorController = m_AbilityOwner.GetComponent<WeaponComponent>().GetActiveWeaponConfig().GetWeaponAnimatorOverride();
+        ApplyAbilityEffect();
     }
 }

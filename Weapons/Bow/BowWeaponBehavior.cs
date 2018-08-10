@@ -13,10 +13,9 @@ public class BowWeaponBehavior : WeaponBehavior
 
     protected override void DoWeaponBehavior()
     {
-        BowWeaponConfig weaponConfig = m_WeaponConfig as BowWeaponConfig;
-        GameObject spawnedProjectile = Instantiate(weaponConfig.GetProjectilePrefab(), transform.position, Quaternion.identity);
-        ProjectileBehavior spawnedProjectilebehavior = spawnedProjectile.GetComponent<ProjectileBehavior>();
-        spawnedProjectilebehavior.SetProjectileDirection(transform.forward);
-        
+        BowWeaponConfig bowConfig = m_WeaponConfig as BowWeaponConfig;
+        ProjectileConfig bowProjectileConfig = bowConfig.GetProjectileConfig();
+
+        GameObject spawnedProjectile = Instantiate(bowProjectileConfig.GetProjectilePrefab(), transform.position, m_WeaponOwner.transform.rotation);
     }
 }

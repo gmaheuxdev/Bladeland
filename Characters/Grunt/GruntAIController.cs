@@ -106,11 +106,11 @@ public class GruntAIController : EnemyAIController
             }
             else if(attackTypeRoll > 80 && attackTypeRoll <90)
             {
-                GetComponent<SpecialAbiltyComponent>().UseSpecialAbility(0);
+                m_CachedWeaponComponent.GetWeaponSpecialAbilities()[0].UseSpecialAbility();
             }
             else
             {
-                GetComponent<SpecialAbiltyComponent>().UseSpecialAbility(1);
+                m_CachedWeaponComponent.GetWeaponSpecialAbilities()[1].UseSpecialAbility();
             }
 
             m_AttackTimer.StopTimer();

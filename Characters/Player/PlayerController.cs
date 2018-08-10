@@ -76,9 +76,18 @@ public class PlayerController : MonoBehaviour
             }
         }
                 
-        if (Input.GetKeyDown(KeyCode.Alpha1)){ m_ActiveAbility = m_CachedWeaponComponent.GetWeaponSpecialAbilities()[0];}
-        if (Input.GetKeyDown(KeyCode.Alpha2)){ m_ActiveAbility = m_CachedWeaponComponent.GetWeaponSpecialAbilities()[1];}
-        if (Input.GetKeyDown(KeyCode.Alpha3)){ m_ActiveAbility = m_CachedWeaponComponent.GetWeaponSpecialAbilities()[2];}
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            m_ActiveAbility = m_CachedWeaponComponent.GetWeaponSpecialAbilities()[0];
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            m_ActiveAbility = m_CachedWeaponComponent.GetWeaponSpecialAbilities()[1];
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            m_ActiveAbility = m_CachedWeaponComponent.GetWeaponSpecialAbilities()[2];
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

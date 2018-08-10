@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = ("SpecialAbilites/MeleeStun"))]
 public class MeleeStunAbilityConfig : SpecialAbilityConfig
 {
     [SerializeField] float m_AbilityEffectDuration;
