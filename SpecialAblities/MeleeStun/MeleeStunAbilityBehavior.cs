@@ -8,7 +8,7 @@ public class MeleeStunAbilityBehavior : SpecialAbilityBehavior
     public override void ApplyAbilityEffect()
     {
         float stunDuration = (m_AbilityConfig as MeleeStunAbilityConfig).GetAbilityEffectDuration();
-        GameObject target = m_AbilityOwner.GetComponent<WeaponComponent>().GetCurrentTarget();
+        GameObject target = m_AbilityOwnerWeaponComponent.GetCurrentTarget();
         target.GetComponent<CharacterMovementComponent>().ApplyMovementSpeedModifier(0.01f, stunDuration);
     }
 }

@@ -8,7 +8,7 @@ public class PowerAttackBehavior : SpecialAbilityBehavior
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public override void ApplyAbilityEffect()
     {
-        GameObject abilityTarget = m_AbilityOwner.GetComponent<WeaponComponent>().GetCurrentTarget();
+        GameObject abilityTarget = m_AbilityOwnerWeaponComponent.GetCurrentTarget();
 
         if (abilityTarget != null)
         {

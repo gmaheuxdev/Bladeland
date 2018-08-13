@@ -20,6 +20,7 @@ public abstract class EnemyAIController : MonoBehaviour
     protected WeaponComponent m_CachedWeaponComponent;
     protected Animator m_CachedAnimatorComponent;
     protected DamageComponent m_CachedDamageComponent;
+    protected SpecialAbiltyComponent m_CachedSpecialAbilityComponent;
 
     //Member variables
     float m_AttackTimer;
@@ -42,6 +43,7 @@ public abstract class EnemyAIController : MonoBehaviour
         m_CachedWeaponComponent = GetComponent<WeaponComponent>();
         m_CachedAnimatorComponent = GetComponent<Animator>();
         m_CachedDamageComponent = GetComponent<DamageComponent>();
+        m_CachedSpecialAbilityComponent = GetComponent<SpecialAbiltyComponent>();
 
         m_CachedWeaponComponent.SetCurrentTarget(m_CachedPlayerGameObject);//Target will always be player
         m_CurrentAIState = AIState.AIState_Idle;

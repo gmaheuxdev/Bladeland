@@ -18,7 +18,7 @@ public class SlowingShotAbilityBehavior : SpecialAbilityBehavior
     void OnSlowingShotAnimationFinished()
     {
         m_AbilityOwnerAnimator.SetBool("IsDoSpecialAbility", false);
-        m_AbilityOwnerAnimator.runtimeAnimatorController = m_AbilityOwner.GetComponent<WeaponComponent>().GetActiveWeaponConfig().GetWeaponAnimatorOverride();
+        m_AbilityOwnerAnimator.runtimeAnimatorController = m_AbilityOwnerWeaponComponent.GetActiveWeaponConfig().GetWeaponAnimatorOverride();
         ApplyAbilityEffect();
     }
 }

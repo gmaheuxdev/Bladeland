@@ -11,7 +11,7 @@ public class DamageComponent : MonoBehaviour
     CharacterStatsComponent m_CachedStatsComponent;
     AudioSource m_CachedAudioSource;
     Animator m_CachedAnimatorComponent;
-    GameObject m_CachedPlayerGameObject; //Only on enemy
+    GameObject m_CachedPlayerGameObject; //Only on enemy //CHANGE THAT NAME
     CharacterTeamEnum m_CurrentTeam;
 
     //Serialized fields

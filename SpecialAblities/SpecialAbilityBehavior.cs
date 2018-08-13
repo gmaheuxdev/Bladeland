@@ -10,6 +10,8 @@ public abstract class SpecialAbilityBehavior : MonoBehaviour
     protected GameObject m_AbilityOwner;
     protected Animator m_AbilityOwnerAnimator;
     protected GameObject m_AbilityCurrentTarget;
+    protected WeaponComponent m_AbilityOwnerWeaponComponent;
+    protected DamageComponent m_AbilityOwnerDamageComponent;
 
     public abstract void ApplyAbilityEffect();
     public void SetAbilityCurrentTarget(GameObject newTarget) { m_AbilityCurrentTarget = newTarget;}
@@ -21,8 +23,11 @@ public abstract class SpecialAbilityBehavior : MonoBehaviour
     protected void Start()
     {
         m_AbilityOwnerAnimator = m_AbilityOwner.GetComponent<Animator>();
+        m_AbilityOwnerWeaponComponent = m_AbilityOwner.GetComponent<WeaponComponent>();
+        m_AbilityOwnerDamageComponent = m_AbilityOwner.GetComponent<DamageComponent>();
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Use()
     {
         m_AbilityOwnerAnimator.SetBool("IsDoSpecialAbility", true);
@@ -49,6 +54,4 @@ public abstract class SpecialAbilityBehavior : MonoBehaviour
     {
         m_AbilityOwner.GetComponent<AudioSource>().PlayOneShot(m_AbilityConfig.GetAbilitySound());
     }
-
-  
 }

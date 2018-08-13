@@ -101,11 +101,11 @@ public class BasicCombatAIController : EnemyAIController
             
             if(randomNumber > 45)
             {
-                GetComponent<SpecialAbiltyComponent>().UseSpecialAbility(0);
+                m_CachedSpecialAbilityComponent.UseSpecialAbility(0);
             }
             else
             {
-                GetComponent<SpecialAbiltyComponent>().UseSpecialAbility(1);
+                m_CachedSpecialAbilityComponent.UseSpecialAbility(1);
             }
 
             m_AttackTimer.StopTimer();

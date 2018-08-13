@@ -12,7 +12,6 @@ public abstract class SpecialAbilityConfig : ScriptableObject
     [SerializeField] AnimatorOverrideController m_AbilityAnimationOverride;
     [SerializeField] AnimationClip m_AbilityAnimation;
     [SerializeField] GameObject m_ProjectileToSpawn;
-    [SerializeField] GameObject m_ZoneOfEffect;
     [SerializeField] float m_AbilityMaxRange;
 
     SpecialAbilityBehavior m_AbilityBehavior;
